@@ -1,0 +1,26 @@
+query Input($discountTags:[String!]=[], $discardedTags:[String!]=[]) {
+  cart {
+    lines {
+      quantity
+      merchandise {
+        __typename
+        ...on ProductVariant {
+          id
+          product{
+            allow : hasAnyTag(tags: $discountTags)
+            deny : hasAnyTag(tags: $discardedTags)
+            productType
+          }
+        }
+      }
+    }
+    buyerIdentity{
+      isAuthenticated
+    }
+  }
+  discountNode {
+    metafield(namespace: "$app:volume-discount", key: "function-configuration") {
+      value
+    }
+  }
+}
